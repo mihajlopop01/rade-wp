@@ -381,6 +381,27 @@ add_filter( 'gettext_woocommerce', function ( $translation, $text ) {
 		'Undo?'                               => 'Vrati?',
 		'View cart'                           => 'Pogledaj korpu',
 		'Please choose product options by visiting <a href="%1$s" title="%2$s">%3$s</a>.' => 'Izaberite veličinu na <a href="%1$s" title="%2$s">%3$s</a>.',
+		// Order emails.
+		'Order summary'                       => 'Pregled porudžbine',
+		'Order #%s'                           => 'Porudžbina #%s',
+		'Order #%1$s (%2$s)'                  => 'Porudžbina #%1$s (%2$s)',
+		'[Order #%s]'                         => '[Porudžbina #%s]',
+		'[Order #%1$s] (%2$s)'                => '[Porudžbina #%1$s] (%2$s)',
+		'Product'                             => 'Proizvod',
+		'Quantity'                            => 'Količina',
+		'Price'                               => 'Cena',
+		'Subtotal:'                           => 'Međuzbir:',
+		'Discount:'                           => 'Popust:',
+		'Shipping:'                           => 'Dostava:',
+		'Total:'                              => 'Ukupno:',
+		'Payment method:'                     => 'Način plaćanja:',
+		'via %s'                              => '%s',
+		'Billing address'                     => 'Adresa za naplatu',
+		'Shipping address'                    => 'Adresa za dostavu',
+		'Customer details'                    => 'Podaci o kupcu',
+		'Customer note'                       => 'Napomena kupca',
+		'Note:'                               => 'Napomena:',
+		'Free!'                               => 'Besplatno!',
 	);
 	return $map[ $text ] ?? $translation;
 }, 10, 2 );
@@ -438,3 +459,76 @@ add_filter( 'woocommerce_webhook_http_args', function ( $args ) {
 	$args['redirection'] = 5;
 	return $args;
 } );
+
+/* -------------------------------------------------------------------------
+ * Order emails — Serbian copy in the design's colours.
+ * Customer body: woocommerce/emails/customer-processing-order.php (+ plain/),
+ * admin body: woocommerce/emails/admin-new-order.php (+ plain/).
+ * ------------------------------------------------------------------------- */
+
+// Subject filters run after WooCommerce's placeholder replacement, so build the number here.
+add_filter( 'woocommerce_email_subject_customer_processing_order', function ( $subject, $order ) {
+	$number = $order ? $order->get_order_number() : '';
+	return 'Vaša porudžbina u Rade Opačić shopu je primljena! (#' . $number . ')';
+}, 10, 2 );
+
+add_filter( 'woocommerce_email_heading_customer_processing_order', function () {
+	return 'Hvala na porudžbini!';
+} );
+
+add_filter( 'woocommerce_email_subject_new_order', function ( $subject, $order ) {
+	$number = $order ? $order->get_order_number() : '';
+	return 'Nova porudžbina #' . $number . ' — Rade Opačić';
+}, 10, 2 );
+
+add_filter( 'woocommerce_email_heading_new_order', function () {
+	return 'Nova porudžbina';
+} );
+
+add_filter( 'woocommerce_email_footer_text', function () {
+	return 'Rade Opačić · radeopacic.com';
+} );
+
+add_filter( 'woocommerce_email_additional_content_customer_processing_order', function () {
+	return 'Ako imate pitanja u vezi sa porudžbinom, pišite nam na support@themerchpack.com.';
+} );
+
+add_filter( 'woocommerce_email_additional_content_new_order', '__return_empty_string' );
+
+// Design tokens: red accent, light panel, near-black text.
+foreach ( array(
+	'woocommerce_email_base_color'            => '#d22630',
+	'woocommerce_email_background_color'      => '#f3f1ec',
+	'woocommerce_email_body_background_color' => '#ffffff',
+	'woocommerce_email_text_color'            => '#0c0c0b',
+	'woocommerce_email_footer_text_color'     => '#8d8a84',
+) as $rade_option => $rade_value ) {
+	add_filter( "pre_option_{$rade_option}", fn() => $rade_value );
+}
+
+/* -------------------------------------------------------------------------
+ * Outgoing mail over SMTP (Titan Mail, opacic@themerchpack.com).
+ * Hostinger's PHP mail() is unreliable, so wp_mail() logs in to Titan.
+ * Address and password are NOT in the theme (this repo is on GitHub) —
+ * they live in wp-config.php on the server as RADE_SMTP_USER / RADE_SMTP_PASS.
+ * Without them, nothing changes.
+ * ------------------------------------------------------------------------- */
+
+add_action( 'phpmailer_init', function ( $phpmailer ) {
+	if ( ! defined( 'RADE_SMTP_USER' ) || ! defined( 'RADE_SMTP_PASS' ) ) {
+		return;
+	}
+	$phpmailer->isSMTP();
+	$phpmailer->Host       = 'smtp.titan.email';
+	$phpmailer->Port       = 587;
+	$phpmailer->SMTPSecure = 'tls';
+	$phpmailer->SMTPAuth   = true;
+	$phpmailer->Username   = RADE_SMTP_USER;
+	$phpmailer->Password   = RADE_SMTP_PASS;
+	$phpmailer->setFrom( RADE_SMTP_USER, 'Rade Opačić', false );
+} );
+
+if ( defined( 'RADE_SMTP_USER' ) ) {
+	add_filter( 'woocommerce_email_from_address', fn() => RADE_SMTP_USER );
+}
+add_filter( 'woocommerce_email_from_name', fn() => 'Rade Opačić' );
