@@ -13,7 +13,7 @@ $table   = function () {
 			<div class="ro-guide__row"><span><?php echo esc_html( $s ); ?></span><span><?php echo esc_html( $w ); ?></span><span><?php echo esc_html( $l ); ?></span></div>
 		<?php endforeach; ?>
 	</div>
-	<p class="ro-guide__note">Mere su u centimetrima, merene na ravno položenoj majici.</p>
+	<p class="ro-guide__note">Dimenzije su izražene u CM. Mogućnost odstupanja: +/- 5%.</p>
 	<?php
 };
 

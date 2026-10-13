@@ -156,11 +156,14 @@ function rade_legal_links() {
 
 /** Size guide rows: the design has no measurements yet ("—"); fill in when the owner sends them. */
 function rade_size_guide_rows() {
-	$rows = array();
-	foreach ( array( 'S', 'M', 'L', 'XL', 'XXL' ) as $size ) {
-		$rows[] = array( $size, '—', '—' );
-	}
-	return $rows;
+	// Owner's measurements (2026-10-13): A = širina, B = dužina, cm.
+	return array(
+		array( 'S', '51', '72' ),
+		array( 'M', '52', '74' ),
+		array( 'L', '56', '77' ),
+		array( 'XL', '60', '81' ),
+		array( 'XXL', '63', '84' ),
+	);
 }
 
 /** Store-wide delivery line shown on the product page. */
@@ -400,3 +403,38 @@ add_filter( 'woocommerce_countries', function ( $countries ) {
 add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
 
 add_filter( 'woocommerce_order_button_text', fn() => 'Završi kupovinu' );
+
+/* -------------------------------------------------------------------------
+ * Order numbers: checkout orders get 411029, 411030, … (no prefix) stored as
+ * meta, so they don't skip like internal IDs do. The next number is one above
+ * the highest existing one, so deleted test orders free their numbers again.
+ * Orders created outside checkout (wp-admin, REST) keep their plain ID.
+ * ------------------------------------------------------------------------- */
+
+define( 'RADE_ORDER_NUMBER_START', 411029 );
+
+function rade_highest_order_number() {
+	global $wpdb;
+	$table = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+		? $wpdb->prefix . 'wc_orders_meta' : $wpdb->postmeta;
+	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) FROM {$table} WHERE meta_key = %s", 'rade_order_number' ) );
+}
+
+add_action( 'woocommerce_checkout_order_created', function ( $order ) {
+	if ( $order->get_meta( 'rade_order_number' ) ) {
+		return;
+	}
+	$order->update_meta_data( 'rade_order_number', (string) max( RADE_ORDER_NUMBER_START, rade_highest_order_number() + 1 ) );
+	$order->save_meta_data();
+} );
+
+add_filter( 'woocommerce_order_number', function ( $order_number, $order ) {
+	return $order->get_meta( 'rade_order_number' ) ?: $order_number;
+}, 10, 2 );
+
+// Google Apps Script answers every POST with a 302; without following it,
+// WooCommerce logs a failed delivery and disables the webhook after 5.
+add_filter( 'woocommerce_webhook_http_args', function ( $args ) {
+	$args['redirection'] = 5;
+	return $args;
+} );
