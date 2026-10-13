@@ -402,9 +402,21 @@ add_filter( 'gettext_woocommerce', function ( $translation, $text ) {
 		'Customer note'                       => 'Napomena kupca',
 		'Note:'                               => 'Napomena:',
 		'Free!'                               => 'Besplatno!',
+		// WooCommerce's own order-email body, in case its default template is used instead of ours.
+		'Hi %s,'                              => 'Zdravo %s,',
+		'Hi,'                                 => 'Zdravo,',
+		'Thank you for your order'            => 'Hvala na porudžbini!',
+		'Just to let you know &mdash; we’ve received your order, and it is now being processed.' => 'Primili smo tvoju porudžbinu i uskoro kreće na pakovanje.',
+		'Here’s a reminder of what you’ve ordered:' => 'Evo pregleda šta si poručio/la:',
+		'Thanks again! If you need any help with your order, please contact us at %s.' => 'Hvala još jednom! Ako ti treba pomoć oko porudžbine, javi nam se na %s.',
 	);
 	return $map[ $text ] ?? $translation;
 }, 10, 2 );
+
+// Dates in WooCommerce emails/orders: numeric Serbian format instead of "October 13, 2026".
+add_filter( 'woocommerce_date_format', function () {
+	return 'd.m.Y.';
+} );
 
 add_filter( 'gettext_with_context_woocommerce', function ( $translation, $text, $context ) {
 	return ( 'Billing %s' === $text && 'checkout-validation' === $context ) ? '%s' : $translation;
