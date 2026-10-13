@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": false,
+		"color": {
+			"defaultPalette": false,
+			"palette": [
+				{ "slug": "bg", "name": "Pozadina", "color": "#0c0c0b" },
+				{ "slug": "panel", "name": "Panel", "color": "#151514" },
+				{ "slug": "text", "name": "Tekst", "color": "#f3f1ec" },
+				{ "slug": "muted", "name": "Prigušeno", "color": "#a3a09a" },
+				{ "slug": "line", "name": "Linija", "color": "#262523" },
+				{ "slug": "red", "name": "Crvena", "color": "#d22630" },
+				{ "slug": "coral", "name": "Koral", "color": "#ff5b52" }
+			]
+		},
+		"typography": {
+			"fontFamilies": [
+				{ "slug": "display", "name": "Barlow Condensed", "fontFamily": "'Barlow Condensed', sans-serif" },
+				{ "slug": "body", "name": "Barlow", "fontFamily": "'Barlow', sans-serif" }
+			]
+		},
+		"layout": { "contentSize": "1344px", "wideSize": "1440px" }
+	},
+	"styles": {
+		"color": { "background": "#0c0c0b", "text": "#f3f1ec" },
+		"typography": { "fontFamily": "var(--wp--preset--font-family--body)" }
+	}
+}
