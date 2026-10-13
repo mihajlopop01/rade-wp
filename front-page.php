@@ -10,7 +10,10 @@ $marquee = array( 'Zvanični merč', 'Kickboxing', 'Proizvodnja Srbija', '100% p
 ?>
 <main class="ro-home">
 	<section class="ro-hero">
-		<img class="ro-hero__img" src="<?php echo esc_url( rade_asset( 'images/banner.jpg' ) ); ?>" alt="Rade Opačić u zvaničnoj majici">
+		<picture>
+			<source media="(max-width: 600px)" srcset="<?php echo esc_url( rade_asset( 'images/hero-mobile.jpg' ) ); ?>">
+			<img class="ro-hero__img" src="<?php echo esc_url( rade_asset( 'images/banner.jpg' ) ); ?>" alt="Rade Opačić u zvaničnoj majici">
+		</picture>
 		<div class="ro-hero__copy">
 			<div class="ro-eyebrow"><span class="ro-d">Zvanični merch</span><span class="ro-m">Zvanični merč · Kickboxing</span></div>
 			<h1 class="ro-hero__title"><span class="ro-d">Rade<br>Opačić</span><span class="ro-m">Rade Opačić</span></h1>
