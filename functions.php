@@ -441,7 +441,8 @@ add_filter( 'woocommerce_order_button_text', fn() => 'Završi kupovinu' );
  * Order numbers: checkout orders get 411029, 411030, … (no prefix) stored as
  * meta, so they don't skip like internal IDs do. The next number is one above
  * the highest existing one, so deleted test orders free their numbers again.
- * Orders created outside checkout (wp-admin, REST) keep their plain ID.
+ * Orders created outside checkout (wp-admin, REST) keep their plain ID,
+ * except orders the Angora app creates over REST (meta angora_app).
  * ------------------------------------------------------------------------- */
 
 define( 'RADE_ORDER_NUMBER_START', 411029 );
@@ -453,13 +454,21 @@ function rade_highest_order_number() {
 	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) FROM {$table} WHERE meta_key = %s", 'rade_order_number' ) );
 }
 
-add_action( 'woocommerce_checkout_order_created', function ( $order ) {
+function rade_assign_order_number( $order ) {
 	if ( $order->get_meta( 'rade_order_number' ) ) {
 		return;
 	}
 	$order->update_meta_data( 'rade_order_number', (string) max( RADE_ORDER_NUMBER_START, rade_highest_order_number() + 1 ) );
 	$order->save_meta_data();
-} );
+}
+
+add_action( 'woocommerce_checkout_order_created', 'rade_assign_order_number' );
+
+add_action( 'woocommerce_rest_insert_shop_order_object', function ( $order, $request, $creating ) {
+	if ( $creating && $order->get_meta( 'angora_app' ) ) {
+		rade_assign_order_number( $order );
+	}
+}, 10, 3 );
 
 add_filter( 'woocommerce_order_number', function ( $order_number, $order ) {
 	return $order->get_meta( 'rade_order_number' ) ?: $order_number;
