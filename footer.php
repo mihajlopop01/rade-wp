@@ -26,7 +26,7 @@ $main = rade_main_product();
 		<a href="<?php echo esc_url( $cart ); ?>">Korpa</a>
 	</div>
 	<div class="ro-footer__bottom">
-		<span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Rade Opačić Shop</span>
+		<span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Rade Opačić Shop <span class="cg-credits">Powered by <a href="https://creatorgoods.co/" target="_blank" rel="noopener">Creator Goods</a><span class="cg-credits__sep"> · </span>Designed by <a href="https://starkstudio.rs/" target="_blank" rel="noopener">Stark Studio</a></span></span>
 		<nav class="ro-footer__legal" aria-label="Informacije">
 			<?php foreach ( rade_legal_links() as $slug => $label ) : ?>
 				<a href="<?php echo esc_url( rade_page_url( $slug ) ); ?>"><?php echo esc_html( $label ); ?></a>

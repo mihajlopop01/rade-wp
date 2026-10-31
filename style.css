@@ -2,10 +2,15 @@
 Theme Name: Rade Opačić
 Theme URI: https://radeopacic.com
 Description: Custom WooCommerce theme for the Rade Opačić shop (classic PHP templates built from the Claude Design mockup).
-Version: 1.2.4
+Version: 1.2.5
 Requires PHP: 8.0
 Text Domain: rade-teme
 License: Proprietary
 */
 
 /* All styles live in assets/css/rade.css. */
+
+/* Footer credits (copyright bar) */
+.cg-credits{display:inline-block;margin-left:10px;font-size:.92em;opacity:.85}
+.cg-credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:640px){.cg-credits{display:block;margin:4px 0 0}}
