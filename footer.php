@@ -1,7 +1,7 @@
 <?php
 /**
- * Footer (mockup screen 01) + the "Dodato u korpu" drawer. The info-page row
- * links to the legal pages created in run 2.
+ * Footer (mockup screen 01) + the "Dodato u korpu" drawer. The "Informacije"
+ * column links the legal pages created in run 2; the bottom bar is © + credits.
  */
 $cart = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' );
 $main = rade_main_product();
@@ -21,17 +21,18 @@ $main = rade_main_product();
 		<div class="ro-footer__label">Plaćanje</div>
 		<div>Plaćanje pouzećem</div>
 	</div>
+	<nav class="ro-footer__col ro-footer__col--info" aria-label="Informacije">
+		<div class="ro-footer__label">Informacije</div>
+		<?php foreach ( rade_legal_links() as $slug => $label ) : ?>
+			<a href="<?php echo esc_url( rade_page_url( $slug ) ); ?>"><?php echo esc_html( $label ); ?></a>
+		<?php endforeach; ?>
+	</nav>
 	<div class="ro-footer__mobile-links">
 		<a href="<?php echo esc_url( rade_product_url() ); ?>">Majica</a>
 		<a href="<?php echo esc_url( $cart ); ?>">Korpa</a>
 	</div>
 	<div class="ro-footer__bottom">
 		<span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Rade Opačić Shop <span class="cg-credits">Powered by <a href="https://creatorgoods.co/" target="_blank" rel="noopener">Creator Goods</a><span class="cg-credits__sep"> · </span>Designed by <a href="https://starkstudio.rs/" target="_blank" rel="noopener">Stark Studio</a></span></span>
-		<nav class="ro-footer__legal" aria-label="Informacije">
-			<?php foreach ( rade_legal_links() as $slug => $label ) : ?>
-				<a href="<?php echo esc_url( rade_page_url( $slug ) ); ?>"><?php echo esc_html( $label ); ?></a>
-			<?php endforeach; ?>
-		</nav>
 	</div>
 </footer>
 <?php get_template_part( 'template-parts/drawer' ); ?>
