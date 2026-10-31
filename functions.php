@@ -577,3 +577,4 @@ if ( defined( 'RADE_SMTP_USER' ) ) {
 }
 add_filter( 'woocommerce_email_from_name', fn() => 'Rade Opačić' );
 require_once __DIR__ . '/cg-tracker.php'; // Creator Goods site tracker (Analitika)
+require_once __DIR__ . '/cg-emails.php'; // Creator Goods customer emails (Serbian, tracking in the completed mail)
