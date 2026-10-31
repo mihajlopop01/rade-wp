@@ -478,3 +478,8 @@ h1, h2, h3 { margin: 0; }
 	.ro-page__title, .ro-shop__title { font-size: 48px; margin-bottom: 22px; }
 	.ro-shop__title { padding: 28px 20px 0; }
 }
+
+/* Footer credits (copyright bar) */
+footer .cg-credits{display:inline-block;margin-left:10px;font-size:.92em;opacity:.85}
+footer .cg-credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:640px){footer .cg-credits{display:block;margin:4px 0 0}}
