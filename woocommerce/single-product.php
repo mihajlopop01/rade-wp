@@ -36,7 +36,7 @@ while ( have_posts() ) :
 				data-ro-buy data-name="<?php echo esc_attr( $product->get_name() ); ?>" data-price="<?php echo esc_attr( $label ); ?>" data-img="<?php echo esc_url( $main['thumb'] ); ?>" data-variations="<?php echo esc_attr( wp_json_encode( $data['variations'] ) ); ?>">
 				<div class="ro-crumbs"><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Početna</a><span>/</span><span>Majica</span></div>
 				<h1 class="ro-product__title"><?php echo esc_html( $product->get_name() ); ?></h1>
-				<div class="ro-product__price" data-ro-price><?php echo esc_html( $label ); ?></div>
+				<div class="ro-product__price ro-price"><span data-ro-price><?php echo esc_html( $label ); ?></span><?php echo rade_sale_html( $product ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 
 				<?php if ( $data['sizes'] ) : ?>
 					<div class="ro-product__sizes">

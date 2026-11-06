@@ -36,6 +36,8 @@ $marquee = array( 'Zvanični merč', 'Kickboxing', 'Proizvodnja Srbija', '100% p
 	}
 	?>
 
+	<?php get_template_part( 'template-parts/collection-teaser' ); ?>
+
 	<div class="ro-tiles">
 		<a class="ro-tile" href="<?php echo esc_url( $link ); ?>">
 			<img src="<?php echo esc_url( rade_asset( 'images/banner-2.jpg' ) ); ?>" alt="Rade Opačić ulazi u ring">

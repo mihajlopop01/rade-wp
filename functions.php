@@ -79,6 +79,21 @@ function rade_price_label( $product ) {
 	return ( $min < $max ? 'od ' : '' ) . rade_price( $min );
 }
 
+/** Crossed-out regular price + discount badge, printed next to the price; empty when not on sale. */
+function rade_sale_html( $product ) {
+	if ( ! $product->is_on_sale() ) {
+		return '';
+	}
+	$variable = $product->is_type( 'variable' );
+	$regular  = (float) ( $variable ? $product->get_variation_regular_price( 'max', true ) : wc_get_price_to_display( $product, array( 'price' => $product->get_regular_price() ) ) );
+	$sale     = (float) ( $variable ? $product->get_variation_price( 'min', true ) : wc_get_price_to_display( $product ) );
+	if ( $regular <= $sale ) {
+		return '';
+	}
+	return '<s class="ro-price-old"><span class="screen-reader-text">Stara cena: </span>' . esc_html( rade_price( $regular ) ) . '</s>'
+		. '<span class="ro-price-off">-' . (int) round( ( $regular - $sale ) / $regular * 100 ) . '%</span>';
+}
+
 /* ---------------------------------------------------------------------------
  * Small helpers
  * ------------------------------------------------------------------------- */
@@ -580,11 +595,12 @@ require_once __DIR__ . '/cg-tracker.php'; // Creator Goods site tracker (Analiti
 require_once __DIR__ . '/cg-emails.php'; // Creator Goods customer emails (Serbian, tracking in the completed mail)
 
 /**
- * Purge the LiteSpeed page cache once after a deploy that changes footer.php,
- * so cached pages don't keep showing the old footer.
+ * Purge the LiteSpeed page cache once after a deploy that changes the page templates
+ * or the stylesheet, so cached pages don't keep showing the old version.
  */
 add_action( 'init', function () {
-	$hash = md5_file( get_template_directory() . '/footer.php' );
+	$files = array( 'footer.php', 'front-page.php', 'template-parts/product-feature.php', 'template-parts/collection-teaser.php', 'woocommerce/single-product.php', 'assets/css/rade.css' );
+	$hash  = md5( implode( array_map( fn( $f ) => md5_file( get_template_directory() . '/' . $f ), $files ) ) );
 	if ( get_option( 'cg_footer_hash' ) !== $hash ) {
 		update_option( 'cg_footer_hash', $hash );
 		do_action( 'litespeed_purge_all' );

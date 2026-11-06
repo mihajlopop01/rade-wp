@@ -21,7 +21,7 @@ $link    = $product->get_permalink();
 		<div class="ro-eyebrow"><?php echo esc_html( sprintf( '%02d', $args['index'] + 1 ) ); ?> / Majica</div>
 		<div class="ro-feature__head">
 			<h2 class="ro-feature__title"><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $product->get_name() ); ?></a></h2>
-			<div class="ro-feature__price" data-ro-card-price><?php echo esc_html( rade_price_label( $product ) ); ?></div>
+			<div class="ro-feature__price ro-price"><span data-ro-card-price><?php echo esc_html( rade_price_label( $product ) ); ?></span><?php echo rade_sale_html( $product ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 		</div>
 		<?php if ( $data['details'] ) : ?>
 			<div class="ro-feature__details">
